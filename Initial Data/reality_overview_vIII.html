@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="sk"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Investičný Prehľad Nehnuteľností v2</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Arial,sans-serif}
+body{background:#f1f4f8;color:#1e293b;font-size:14px}
+header{background:#0056b3;color:#fff;padding:14px 20px;border-bottom:4px solid #003d80}
+header h1{font-size:21px}header p{font-size:12px;color:#d0e1f9}
+.layout{display:grid;grid-template-columns:270px 1fr;gap:16px;max-width:1400px;margin:16px auto;padding:0 14px}
+aside{background:#fff;border:1px solid #cbd5e1;border-radius:6px;padding:14px;align-self:start;position:sticky;top:10px}
+aside h3{font-size:12px;text-transform:uppercase;color:#64748b;margin:12px 0 5px}
+aside h3:first-child{margin-top:0}
+aside input[type=text],aside select{width:100%;padding:7px;border:1px solid #cbd5e1;border-radius:4px;font-size:13px}
+aside input[type=range]{width:100%}aside input[type=number]{width:100%;padding:6px;border:1px solid #cbd5e1;border-radius:4px;font-size:13px}.ms{display:inline-block;min-width:38px;text-align:center;padding:2px 6px;border-radius:10px;color:#fff;font-weight:bold;font-size:12px}
+.rv{font-size:12px;color:#0056b3;font-weight:bold}.soldtag{background:#6c757d;color:#fff;border-radius:3px;padding:1px 5px;font-size:10px;font-weight:bold;vertical-align:middle}
+.chk{display:flex;gap:6px;align-items:center;font-size:13px;margin-top:6px}
+.btn{padding:8px 12px;border:none;border-radius:4px;font-weight:bold;cursor:pointer;color:#fff;background:#0056b3;text-decoration:none;display:inline-block}
+.btn.g{background:#6c757d;width:100%;margin-top:12px}.btn.green{background:#28a745}.btn.red{background:#e00}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:12px}
+.kpi{background:#fff;border:1px solid #cbd5e1;border-left:4px solid #0056b3;border-radius:5px;padding:10px}
+.kpi small{color:#64748b;font-size:11px;text-transform:uppercase}.kpi b{display:block;font-size:19px;margin-top:2px}
+.card{background:#fff;border:1px solid #cbd5e1;border-radius:6px;padding:12px;margin-bottom:12px}
+.card h3{font-size:14px;margin-bottom:6px}
+.tabs{display:flex;gap:8px;align-items:center;margin-bottom:12px}.tab{padding:9px 18px;border:1px solid #cbd5e1;background:#fff;border-radius:6px;cursor:pointer;font-weight:bold;color:#334155;font-size:14px}.tab.on{background:#0056b3;color:#fff;border-color:#0056b3}#tabhint{font-size:12px;color:#64748b}.legend{font-size:11px;color:#555;margin-top:4px}.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin:0 3px 0 8px}
+#insights{font-size:13px;line-height:1.6}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead{background:#e9ecef}th{cursor:pointer;text-align:left;white-space:nowrap}
+th,td{padding:10px 8px;border-bottom:1px solid #eee}
+tbody tr{cursor:pointer}tbody tr:hover{background:#f8fafc}
+.rank{background:#0056b3;color:#fff;border-radius:50%;padding:2px 7px;font-size:12px}
+.price{font-weight:bold;color:#d9534f}
+.badge{padding:2px 6px;border-radius:3px;font-size:11px;font-weight:bold;text-transform:uppercase}
+.own{background:#d4edda;color:#155724}.rent{background:#f8d7da;color:#721c24}
+.ybar{height:6px;background:#e2e8f0;border-radius:3px;margin-top:3px;width:70px}.ybar i{display:block;height:100%;background:#28a745;border-radius:3px}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:2px;background:#e2e8f0}
+.pag{display:flex;justify-content:center;gap:5px;margin-top:12px}
+.pag button{padding:5px 11px;border:1px solid #ccc;background:#fff;border-radius:3px;cursor:pointer}
+.pag button.on{background:#0056b3;color:#fff}.pag button:disabled{color:#aaa;cursor:not-allowed}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);overflow:auto;z-index:99}
+.mc{background:#fff;margin:30px auto;padding:24px;width:92%;max-width:900px;border-radius:6px;position:relative}
+.x{position:absolute;right:18px;top:10px;font-size:28px;cursor:pointer;color:#888}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;background:#eef5ff;padding:12px;border-radius:4px;margin:12px 0;font-size:13px}
+.ag{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:10px}
+.ac{background:#f8f9fa;border:1px solid #e2e8f0;border-top:4px solid #0056b3;padding:10px;border-radius:4px;font-size:13px}
+.ac h4{font-size:13px;text-transform:uppercase;margin-bottom:6px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}aside{position:static}.kpis{grid-template-columns:repeat(2,1fr)}.ag{grid-template-columns:1fr}}
+@page{size:A4 portrait;margin:15mm 12mm}
+@media print{*{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{background:#fff;font-size:10pt}header,aside,.pag,.noprint,.x{display:none!important}
+.layout{display:block;margin:0;padding:0}.kpis{grid-template-columns:repeat(5,1fr)}
+.modal{display:block;position:static;background:none}.mc{margin:0;padding:0;width:100%;max-width:none}
+tr{break-inside:avoid}table{font-size:9pt}}
+</style></head><body>
+<header class="noprint"><h1>Investičný Prehľad Nehnuteľností</h1><p>Analytická databáza obchodných priestorov · cenová mapa (Slovensko)</p></header>
+<div class="layout">
+<aside>
+ <h3>Hľadať</h3><input type="text" id="q" placeholder="Názov, kontakt, ID...">
+ <h3>Lokalita</h3><input type="text" id="loc" placeholder="📍 Mesto, ulica...">
+ <h3>Vlastníctvo</h3><select id="own"><option value="">Všetky</option><option>Osobné</option><option>Nájom</option></select>
+ <h3>Max. cena: <span class="rv" id="pv"></span></h3><input type="range" id="pmax" min="50000" max="400000" step="5000" value="400000">
+ <h3>Max. cena za m²: <span class="rv" id="sv"></span></h3><input type="range" id="smax" min="500" max="6000" step="100" value="6000">
+ <h3>Min. plocha: <span class="rv" id="av"></span></h3><input type="range" id="amin" min="0" max="300" step="10" value="0">
+ <h3>Max. riziko</h3><select id="rmax"><option value="5">Akékoľvek</option><option value="1">1 – Veľmi nízke</option><option value="2">≤ 2 – Nízke</option><option value="3">≤ 3 – Stredné</option></select>
+ <label class="chk"><input type="checkbox" id="yonly"> Len s vypočítaným výnosom</label>
+ <h3>🎯 Benchmark (zhoda)</h3>
+ <input type="text" id="bcity" value="Košice" placeholder="Mesto">
+ <div style="display:flex;gap:6px;margin-top:6px"><input type="number" id="bmin" value="80" title="Min. plocha m²"><input type="number" id="bmax" value="150" title="Max. plocha m²"></div>
+ <input type="number" id="bprice" value="400000" step="10000" style="margin-top:6px" title="Max. cena €">
+ <label class="chk"><input type="checkbox" id="bdw" checked> Výklad</label>
+ <label class="chk"><input type="checkbox" id="bst" checked> Skladová časť</label>
+ <label class="chk"><input type="checkbox" id="bte" checked> Možnosť nájomcu</label>
+ <label class="chk"><input type="checkbox" id="bin" checked> Vlastnícka nezávislosť</label>
+ <h3>Min. pešia frekvencia</h3><select id="bft"><option value="0">Nezáleží</option><option value="3">3 / 5</option><option value="4">4 / 5</option><option value="5" selected>5 / 5</option></select>
+ <h3>Min. zhoda: <span class="rv" id="msv"></span></h3><input type="range" id="msmin" min="0" max="100" step="5" value="0">
+ <h3>Zoradiť</h3><select id="sort"><option value="rank">Odporúčanie</option><option value="pa">Cena ↑</option><option value="pd">Cena ↓</option><option value="sa">€/m² ↑</option><option value="yd">Výnos ↓</option><option value="ra">Riziko ↑</option><option value="ms">Zhoda s benchmarkom ↓</option></select>
+ <button class="btn g" onclick="reset()">Reset filtrov</button>
+ <button class="btn" style="width:100%;margin-top:8px" onclick="window.print()">🖨️ Tlačiť prehľad (A4)</button>
+</aside>
+<main>
+ <div class="tabs noprint"><button id="tabAct" class="tab on" onclick="setTab('act')">Aktívne (<span id="nAct"></span>)</button><button id="tabSold" class="tab" onclick="setTab('sold')">📦 Archív (<span id="nSold"></span>)</button><span id="tabhint"></span></div>
+ <div class="kpis" id="kpis"></div>
+ <div class="card"><h3>Mapa ponúk: plocha vs. cena za m²</h3><div id="chart"></div>
+  <div class="legend"><i style="background:#28a745"></i>riziko 1<i style="background:#8bc34a"></i>2<i style="background:#f0ad4e"></i>3<i style="background:#d9534f"></i>4+ · prerušovaná čiara = medián €/m² · klik = detail · prerušovaný obrys = archív (ostáva v benchmarku)</div></div>
+ <div class="card"><h3>Automatické zistenia</h3><div id="insights"></div></div>
+ <div class="card" style="padding:0;overflow:auto"><table><thead><tr><th>#</th><th>Nehnuteľnosť</th><th>Vlastn.</th><th>Plocha</th><th>€/m²</th><th>Cena</th><th>Hrubý výnos</th><th>Zhoda 🎯</th><th>Riziko</th><th class="noprint">Predané</th><th class="noprint"></th></tr></thead><tbody id="tb"></tbody></table></div>
+ <div class="pag noprint" id="pag"></div>
+</main></div>
+
+<div id="modal" class="modal"><div class="mc"><span class="x" onclick="closeM()">&times;</span>
+ <h2 id="mt" style="color:#0056b3"></h2><p id="ms" style="color:#666;font-size:13px"></p>
+ <div class="meta" id="mm"></div><div id="mb" style="margin:8px 0 14px;font-size:13px"></div>
+ <h3 style="font-size:15px;border-bottom:2px solid #0056b3;padding-bottom:4px">Trojstĺpcová investičná analýza</h3>
+ <div class="ag"><div class="ac" style="border-top-color:#d9534f"><h4 style="color:#d9534f">1. Riziko</h4><p id="mr"></p></div>
+ <div class="ac" style="border-top-color:#5cb85c"><h4 style="color:#28a745">2. Výnos</h4><p id="my"></p></div>
+ <div class="ac" style="border-top-color:#f0ad4e"><h4 style="color:#f0ad4e">3. Využitie &amp; alternatíva</h4><p id="mu"></p></div></div>
+ <div id="adbox" style="display:none;margin-top:14px;background:#fffbe6;border:1px solid #f0d98c;border-radius:4px;padding:12px;font-size:13px;line-height:1.6"><h4 style="margin-bottom:6px">Pôvodný text inzerátu</h4><p id="adtxt"></p></div>
+ <div class="noprint" style="margin-top:18px;text-align:right"><button class="btn" onclick="window.print()">🖨️ Tlačiť ponuku</button> <label class="chk" style="display:inline-flex;margin-right:12px;font-weight:bold"><input type="checkbox" id="msold" onchange="setSold(curId,this.checked)"> Predané (už nie je v predaji)</label><button id="adbtn" class="btn" style="background:#f39c12" onclick="toggleAd()">📄 Zobraziť inzerát</button>
+ <a id="mv" class="btn red" target="_blank" style="display:none">▶ Video</a> <a id="mc" class="btn green">📞 Kontaktovať</a></div></div></div>
+
+<script>
+// rl = úroveň rizika 1-5; rent = [min,max] mesačné nájomné (€) odvodené z textu ponuky; null = neuvedené
+const P=[
+{id:'BA-01',tn:true,rank:1,title:'Nebytový priestor pri OC Nivy (Velehradská 9)',city:'Bratislava II - Ružinov',price:200000,sqm:66,ownership:'Osobné',date:'02.10.2026',contact:'Lubomír (0905...)',phone:'0905000000',rl:1,rent:[1000,1200],risk:'Extrémne nízke riziko. Najvyššia likvidita na Slovensku.',yield:'Odhadované nájomné 1 000 – 1 200 €/mesiac.',usage:'<strong>Súčasné:</strong> Sídlo firmy.<br><strong>Alternatíva:</strong> Ambulancia, kaviareň, salón.'},
+{id:'BA-09',rank:2,title:'Obchodný priestor 169 m² s galériou (Rybničná ul.)',city:'Bratislava III - Vajnory',price:259000,sqm:169,ownership:'Osobné',date:'02.10.2026',contact:'Eduard Číž (0910 706 802)',phone:'0910706802',video:'https://youtube.com/watch?v=pmahVvJfi80',rl:2,rent:null,risk:'Nízke až stredné riziko. Bezkonkurenčná cena za m² v BA.',yield:'Pri dostavbe galérie vzrastie plocha na >220 m².',usage:'<strong>Súčasné:</strong> Čiastočne rekonštruovaný nebytový priestor.<br><strong>Alternatíva:</strong> Showroom, fitness, klinika, e-shop.'},
+{id:'PD-08',tn:true,rank:3,title:'Nebytový priestor so stabilnou Optikou',city:'Prievidza - Ul. M. R. Štefánika',price:156000,sqm:79,ownership:'Osobné',date:'02.10.2026',contact:'Michal (0915 288 136)',phone:'0915288136',rl:1,rent:[780,780],content:'Ponúkame na predaj nebytový priestor o výmere 79 m2, nachádzajúci sa na prízemí bytového domu v atraktívnej lokalite námestia J.C.Hronského, na Ulici M. R. Štefánika v Prievidzi.<br><br>Priestor je aktuálne prenajatý dlhodobému a stabilnému nájomcovi – prevádzke optiky, čo predstavuje zaujímavú investičnú príležitosť s okamžitým výnosom bez potreby hľadať nového nájomcu.<br><br><b>Základné informácie:</b><br>• výmera: 79 m2<br>• prízemie bytového domu<br>• frekventovaná lokalita na starom sídlisku<br>• stabilný a overený nájomca s vlastnou klientelou<br>• vlastné sociálne zariadenie, nakladacia rampa, bezproblémové parkovanie<br>• vhodné ako investícia s pravidelným príjmom z nájmu<br>• dobrá dostupnosť a občianska vybavenosť v okollí<br><br>Možnosť kúpiť aj vedlajší priestor tiež so stabilným nájomcom, prevádzka pedikúry. Zľava na cene.<br><br>Vďaka svojej polohe a dlhodobo fungujúcej prevádzke predstavuje nehnuteľnosť ideálnu voľbu pre investorov, ktorí hľadajú bezpečné zhodnotenie svojich finančných prostriedkov.<br><br>Výnosové percento nad 6 %.<br><br>Pre viac informácií alebo dohodnutie obhliadky nás kontaktujte na tel. č.: 0915288136.<br><br>Kontakt: Michal, 0915288136<br>Lokalita: 971 01 Prievidza<br>Cena: 156 000 €<br>Videlo: 189 ľudí',risk:'Nízke riziko. Dlhodobý zabehnutý nájomca (optika).',yield:'Garantovaný výnos nad 6 % p.a. (v analytike použitá spodná hranica 6 %).',usage:'<strong>Súčasné:</strong> Optika.<br><strong>Alternatíva:</strong> Lekáreň alebo iné služby.'},
+{id:'DK-06',ind:'building',sold:true,tn:true,ft:4,rank:4,title:'Mestská 2-podlažná budova na Námestí',city:'Dolný Kubín',price:360000,sqm:155,ownership:'Osobné',date:'02.10.2026',contact:'Mirka (090...)',phone:'0900000000',rl:2,rent:null,risk:'Nízke až stredné riziko. Pešia zóna.',yield:'Multi-tenant výnos (retail + kancelárie).',usage:'<strong>Súčasné:</strong> Obchod + kancelárie.<br><strong>Alternatíva:</strong> Prestavba podkrovia na 2 byty / Airbnb.'},
+{id:'ND-02',rank:5,title:'Zabehnuté potraviny s gastro výbavou',city:'Nová Dubnica',price:115000,sqm:74,ownership:'Osobné',date:'02.10.2026',contact:'Matej Michalec (091...)',phone:'0910000000',rl:1,rent:null,risk:'Nízke riziko pri vlastnej prevádzke.',yield:'Okamžitý denný cashflow. Nízka cena (1 554 €/m²).',usage:'<strong>Súčasné:</strong> Potraviny, pekáreň.<br><strong>Alternatíva:</strong> Kaviareň, lekáreň, gastro.'},
+{id:'RK-07',rank:6,title:'Obchodný priestor rozdelený na 2 časti',city:'Ružomberok - Považská ul.',price:89000,sqm:71,ownership:'Osobné',date:'02.10.2026',contact:'Libor BAĎO (0915 331 561)',phone:'0915331561',rl:1,rent:null,risk:'Nízke riziko. Nízka cena (89 000 €), vlastný kotol.',yield:'Vysoký výnos k cene nehnuteľnosti.',usage:'<strong>Súčasné:</strong> Nebytový priestor.<br><strong>Alternatíva:</strong> 2 samostatné prevádzky (kaderníctvo + e-shop).'},
+{id:'PO-03',ind:'building',rank:7,title:'Obchodný objekt s pozemkom pri stanici',city:'Prešov',price:119990,sqm:49,ownership:'Osobné',date:'02.10.2026',contact:'Vladimír Sirotňak (0944 158 277)',phone:'0944158277',rl:1,rent:null,risk:'Nízke riziko. Vlastníctvo pozemku (73 m²).',yield:'Stabilný príjem z lokálnych služieb.',usage:'<strong>Súčasné:</strong> Potraviny.<br><strong>Alternatíva:</strong> Občerstvenie, Zásielkovňa, nadstavba.'},
+{id:'NM-04',tn:true,rank:8,title:'Nebytový priestor 318 m² s výťahom',city:'Nemšová',price:355000,sqm:318,ownership:'Osobné',date:'02.10.2026',contact:'Lukáš Berák (0904 119 444)',phone:'0904119444',rl:3,rent:null,risk:'Stredné riziko. Vyšší vstupný kapitál.',yield:'Potenciál pri rozdelení na viacero nájomcov.',usage:'<strong>Súčasné:</strong> Obchod a administratíva.<br><strong>Alternatíva:</strong> Sídlo firmy, zdravotné stredisko.'},
+{id:'LC-05',rank:9,title:'Odstúpenie prevádzky tovaru (Nájom)',city:'Lučenec',price:95000,sqm:77,ownership:'Nájom',date:'02.10.2026',contact:'Jozef Kret (0915 142 544)',phone:'0915142544',rl:4,rent:null,risk:'Vysoké riziko. Odstúpenie nájmu a tovaru.',yield:'Závislý od marže z predaja tovaru.',usage:'<strong>Súčasné:</strong> Elektromateriál.<br><strong>Alternatíva:</strong> Výpredaj zásob / nová predajňa.'},
+{id:'KE-10',rank:10,title:'Kancelárske priestory v centre mesta',city:'Košice I - Staré Mesto',price:185000,sqm:82,ownership:'Osobné',date:'02.10.2026',contact:'Peter (0903...)',phone:'0903000000',rl:1,rent:null,risk:'Nízke riziko. Výborná adresa v centre.',yield:'Stabilný prenájom pre firmy a právnikov.',usage:'<strong>Súčasné:</strong> Advokátska kancelária.<br><strong>Alternatíva:</strong> IT studio, zubná ambulancia.'},
+{id:'ZA-11',dw:true,tn:true,ft:4,rank:11,title:'Obchodný priestor s preskleným výkladom',city:'Žilina - Bulvár',price:210000,sqm:90,ownership:'Osobné',date:'02.10.2026',contact:'Maroš (0911...)',phone:'0911000000',rl:1,rent:[1085,1085],risk:'Nízke riziko. Rušná ulica s vysokým pohybom ľudí.',yield:'Výnos 6.2 % p.a. pri dlhodobom nájme.',usage:'<strong>Súčasné:</strong> Predajňa oblečenia.<br><strong>Alternatíva:</strong> Kaviareň, pobočka banky/poisťovne.'},
+{id:'KE-12',dw:true,tn:true,ft:5,rank:12,title:'Obchodný priestor 25 m² s výkladom na Alžbetinej',city:'Košice I - Staré Mesto (Alžbetina)',price:149000,sqm:25,ownership:'Osobné',date:'02.10.2026',contact:'Marek Ferko - Kontakt Reality (0910 108 997)',phone:'0910108997',rl:1,rent:[700,850],content:'<b>Obchodný - kancelársky priestor 25 m2 ul. Alžbetina, Košice staré mesto</b><br>Typ: Obchodné priestory<br>Ulica: Alžbetina<br>Mestská časť: Historické centrum<br>Obec: Košice-Staré Mesto<br><br>V ponuke na predaj obchodný priestor 25 m2 s výkladom na ulici Alžbetina, Staré mesto, Centrum.<br><br>Jedná sa o menší priestor s výkladom avšak veľmi žiadaný a na frekventovanej časti.<br><br>Vhodný na akúkoľvek obchodnú či kancelársku prevádzku.<br>V priestore sa nachádza voda a WC.<br>Samostatne meraná el. energia, plynový kúrenie - gamatka.<br><br>Parkovanie je verejné.<br>Len vážny záujemca.<br><br>Marek Ferko<br>Realitný maklér – Kontakt Reality<br>📱 Tel. číslo: 0910 108 997<br>✉️ Mail: marek.ferko(at)kontaktreality.sk<br><br>Status: aktívne<br>Vlastníctvo: osobné<br>Úžitková plocha: 25 m2<br>Zastavaná plocha: 25 m2<br>Stav: úplne prerobený<br>Celková plocha: 25 m2<br><br>Kontakt: Marek Ferko, Kontakt reality<br>Lokalita: 040 01 Košice<br>Cena: 149 000 €<br>Videlo: 283 ľudí',risk:'Nízke riziko. Lukratívna pešia ulica v historickom centre.',yield:'Trhové nájomné cca 700 - 850 €/mesiac.',usage:'<strong>Súčasné:</strong> Kompletne prerobený priestor (voda, WC, samostatná el., plyn).<br><strong>Alternatíva:</strong> Butik, espresso bar, optika, zlatníctvo, kancelária služieb.'},
+{id:'KE-13',tn:true,rank:13,title:'Obchodný priestor 18,77 m² (Bačíkova ul.)',city:'Košice I - Staré Mesto',price:83500,sqm:18.77,ownership:'Osobné',date:'02.10.2026',contact:'LCF Reality (0905 166 604)',phone:'0905166604',rl:1,rent:null,content:'LCF REAL ponúka na predaj obchodné priestory 18,77 m2 na Bačíkovej ul. v Košiciach. Priestory sú aktuálne prenajaté (holičstvo). Vykurovanie je ústredné, vlastné merače.',risk:'Nízke riziko. Stabilná lokalita v historickom centre mesta, vysoký dopyt po malých prevádzkach.',yield:'Aktuálne prenajaté (holičstvo) – stabilný príjem bez nutnosti hľadať nového nájomcu.',usage:'<strong>Súčasné:</strong> Holičstvo.<br><strong>Alternatíva:</strong> Sídlo firmy, butik, showroom, výdajné miesto, kancelária.'},
+{id:'KE-14',ind:'own',rank:14,title:'Obchodný priestor 51 m² (Sokolovská ul.)',city:'Košice',price:150000,sqm:51,ownership:'Osobné',date:'02.10.2026',contact:'Diana (0940 000 000)',phone:'0940000000',rl:2,rent:null,content:'Nebytový priestor v zateplenom bytovom dome, 51 m2. Samostatný vstup z exteriéru. Vhodné na obchod, služby alebo kanceláriu.',risk:'Hodnotenie 2/5 (nízke) prevzaté zo zjednodušeného zoznamu. Podrobný popis z inzerátu chýba.',yield:'Nájomné nie je uvedené, výnos sa nedá vypočítať.',usage:'<strong>Súčasné:</strong> Potraviny.<br><strong>Alternatíva:</strong> Služby, kancelária (podľa inzerátu).'},
+{id:'KE-15',ind:'complex',ft:2,dw:true,st:'adj',rank:15,title:'Nový nebytový priestor 60 m² (Lorinčík-Háje)',city:'Košice - Lorinčík-Háje',price:170000,sqm:60,ownership:'Osobné',date:'18.10.2026',contact:'Branislav Čuri - Branislav Čuri Reality (+421 918 783 223)',phone:'+421918783223',rl:2,rent:null,content:'NA PREDAJ NOVÝ NEBYTOVÝ PRIESTOR - KOŠICE, LORINČÍK-HÁJE<br><br>Realitná kancelária BRANISLAV ČURI REALITY ponúka na predaj moderný nebytový priestor s výmerou 60 m², situovaný na prízemí novostavby v tichej a vyhľadávanej lokalite Košice – Lorinčík-Háje. Ide o takmer nepoužívaný priestor vo výbornom technickom stave, ktorý je pripravený na okamžité využitie.<br><br><b>Dispozícia:</b> priestranná hlavná miestnosť s kuchynským kútom (chladnička s mrazničkou, mikrovlnná rúra), chodba, kúpeľňa (so sprchovacím kútom), samostatná toaleta.<br><br><b>Technické vybavenie:</b> klimatizácia, poplašné zariadenie, ústredné kúrenie, napojenie na elektrinu, vodovod. Nebytový priestor je nezariadený, čo umožňuje jeho flexibilné prispôsobenie.<br><br><b>Využitie:</b> Priestor je ideálny na kancelárske účely alebo pre oblasť služieb (kozmetika, masáže, poradenstvo, atď.).<br><br><b>Parkovanie:</b> V cene je zahrnuté 1 samostatné vonkajšie parkovacie miesto v blízkosti bytového domu.<br><br><b>Lokalita:</b> Lorinčík-Háje je novovzniknutá rezidenčná štvrť s rastúcou občianskou vybavenosťou a výborným prístupom do centra mesta. Lokalita ponúka pokojné prostredie v prírode, a zároveň dostupnosť MHD aj prepojovaciu cestu na Košice-Pereš a Košice‑Západ.<br><br><b>Cena:</b> 170 000,- Eur. Cena je vrátane parkovacieho miesta.<br><br>Pre viac informácií alebo záujem o obhliadku nás neváhajte kontaktovať na telefónnom čísle: +421 918 783 223 Ing. Branislav Čuri<br><br>Kontakt: Branislav Čuri<br>Lokalita: 040 11 Košice<br>Cena: 170 000 €<br>Videlo: 301 ľudí',risk:'Nízke až stredné riziko (môj odhad, inzerát riziká neuvádza): novostavba v dobrom stave, ale tichá rezidenčná štvrť s nepreukázaným dopytom po prenájme a bez nájomcu.',yield:'Nájomné ani nájomca nie sú uvedené, výnos sa nedá vypočítať.',usage:'<strong>Súčasné:</strong> Takmer nepoužívaný, nezariadený priestor (kuchynský kút, kúpeľňa, klimatizácia, alarm); v cene 1 parkovacie miesto.<br><strong>Alternatíva:</strong> Kancelárie, služby (kozmetika, masáže, poradenstvo).<br><strong>Doplnené mnou:</strong> celý priestor je z ulice plne presklený (výklad); sklad je možný po úprave.'}
+];
+try{const sv=JSON.parse(localStorage.getItem('reality_sold')||'{}');P.forEach(p=>{if(p.id in sv)p.sold=sv[p.id]})}catch(e){}
+let curId=null;
+P.forEach(p=>{p.ppm=Math.round(p.price/p.sqm);p.y=p.rent?(p.rent[0]+p.rent[1])/2*12/p.price*100:null;});
+const $=id=>document.getElementById(id),fmt=n=>Math.round(n).toLocaleString('sk-SK'),RC=['','#28a745','#8bc34a','#f0ad4e','#d9534f','#d9534f'];
+let cur=[],base=[],tab='act',page=1;const PER=10;
+const med=a=>{if(!a.length)return 0;const s=[...a].sort((x,y)=>x-y),m=s.length>>1;return s.length%2?s[m]:(s[m-1]+s[m])/2};
+const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
+
+function apply(){
+ const q=$('q').value.toLowerCase(),l=$('loc').value.toLowerCase(),o=$('own').value,pm=+$('pmax').value,sm=+$('smax').value,am=+$('amin').value,rm=+$('rmax').value,yo=$('yonly').checked,ss=tab,B=bench(),msm=+$('msmin').value;P.forEach(p=>{p.sc=score(p,B);p.ms=p.sc.total});
+ $('pv').textContent=fmt(pm)+' €';$('sv').textContent=fmt(sm)+' €';$('av').textContent=am+' m²';$('msv').textContent=msm+'+';
+ base=P.filter(p=>(p.title+p.contact+p.id).toLowerCase().includes(q)&&(p.city+p.title).toLowerCase().includes(l)&&(!o||p.ownership===o)&&p.price<=pm&&p.ppm<=sm&&p.sqm>=am&&(p.rl==null||p.rl<=rm)&&(!yo||p.y!==null)&&p.ms>=msm);
+ cur=base.filter(p=>(ss==='sold')===!!p.sold);
+ const s=$('sort').value;
+ cur.sort({rank:(a,b)=>a.rank-b.rank,pa:(a,b)=>a.price-b.price,pd:(a,b)=>b.price-a.price,sa:(a,b)=>a.ppm-b.ppm,yd:(a,b)=>(b.y??-1)-(a.y??-1),ra:(a,b)=>(a.rl??9)-(b.rl??9)||a.rank-b.rank,ms:(a,b)=>b.ms-a.ms}[s]);
+ page=1;render();
+}
+function tabs(){$('nAct').textContent=P.filter(p=>!p.sold).length;$('nSold').textContent=P.filter(p=>p.sold).length;$('tabAct').className='tab'+(tab==='act'?' on':'');$('tabSold').className='tab'+(tab==='sold'?' on':'');$('tabhint').textContent=tab==='sold'?'Odškrtnutím „Predané“ sa ponuka vráti medzi aktívne. Archív ostáva súčasťou benchmarku (medián, graf).':''}
+function setTab(t){tab=t;apply()}
+function render(){tabs();kpis();chart();insights();table();}
+function kpis(){
+ const ys=cur.filter(p=>p.y!==null).map(p=>p.y);
+ const k=[['Ponúk',cur.length+(cur.some(p=>p.sold)?` <small style="font-size:11px;color:#64748b">(z toho ${cur.filter(p=>p.sold).length} predaných)</small>`:'')],['Priem. cena',cur.length?fmt(avg(cur.map(p=>p.price)))+' €':'–'],['Medián €/m² (aj archív)',base.length?fmt(med(base.map(p=>p.ppm)))+' €':'–'],['Priem. hrubý výnos',ys.length?avg(ys).toFixed(1)+' %':'–'],['Spolu kapitál',fmt(cur.reduce((a,p)=>a+p.price,0))+' €']];
+ $('kpis').innerHTML=k.map(x=>`<div class="kpi"><small>${x[0]}</small><b>${x[1]}</b></div>`).join('');
+}
+function chart(){
+ if(!base.length){$('chart').innerHTML='<p style="padding:20px;color:#888">Žiadne dáta.</p>';return;}
+ const W=640,H=250,L=50,B=30,T=10,R=15,mx=Math.max(...base.map(p=>p.sqm))*1.1,my=Math.max(...base.map(p=>p.ppm))*1.15,
+ X=v=>L+v/mx*(W-L-R),Y=v=>H-B-v/my*(H-B-T),md=med(base.map(p=>p.ppm));
+ let s=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto"><line x1="${L}" y1="${H-B}" x2="${W-R}" y2="${H-B}" stroke="#94a3b8"/><line x1="${L}" y1="${T}" x2="${L}" y2="${H-B}" stroke="#94a3b8"/>`;
+ for(let i=0;i<=4;i++){const v=my*i/4;s+=`<text x="${L-5}" y="${Y(v)+4}" font-size="10" text-anchor="end" fill="#64748b">${fmt(v)}</text><line x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" stroke="#eef2f7"/>`;
+  const a=mx*i/4;s+=`<text x="${X(a)}" y="${H-B+14}" font-size="10" text-anchor="middle" fill="#64748b">${Math.round(a)} m²</text>`;}
+ s+=`<line x1="${L}" x2="${W-R}" y1="${Y(md)}" y2="${Y(md)}" stroke="#0056b3" stroke-dasharray="5 4"/><text x="${W-R}" y="${Y(md)-4}" font-size="10" text-anchor="end" fill="#0056b3">medián ${fmt(md)} €/m²</text>`;
+ base.forEach(p=>{s+=`<g style="basesor:pointer" onclick="openM('${p.id}')"><circle cx="${X(p.sqm)}" cy="${Y(p.ppm)}" r="${p.y?5+p.y:6}" fill="${RC[p.rl]||'#94a3b8'}" fill-opacity="${p.sold?.12:.75}" stroke="${p.sold?'#64748b':'#fff'}"${p.sold?' stroke-dasharray="3 2"':''}/><text x="${X(p.sqm)+8}" y="${Y(p.ppm)-6}" font-size="9" fill="#334155">${p.id}</text><title>${p.title}: ${fmt(p.ppm)} €/m², ${p.sqm} m²${p.y?', výnos '+p.y.toFixed(1)+' %':''}</title></g>`});
+ $('chart').innerHTML=s+'</svg>';
+}
+function insights(){
+ if(!cur.length){$('insights').innerHTML='–';return;}
+ const lo=[...cur].sort((a,b)=>a.ppm-b.ppm)[0],hi=[...cur].sort((a,b)=>b.ppm-a.ppm)[0],md=med(cur.map(p=>p.ppm)),
+ wy=cur.filter(p=>p.y!==null).sort((a,b)=>b.y-a.y)[0],bs=cur.filter(p=>p.y!==null&&p.rl!=null&&p.rl<=2).sort((a,b)=>b.y-a.y)[0];
+ let h=`• Najlacnejšie za m²: <b>${lo.id}</b> (${fmt(lo.ppm)} €/m², ${Math.round((1-lo.ppm/md)*100)} % pod mediánom).<br>• Najdrahšie za m²: <b>${hi.id}</b> (${fmt(hi.ppm)} €/m², ${Math.round((hi.ppm/md-1)*100)} % nad mediánom).<br>`;
+ if(wy)h+=`• Najvyšší vypočítaný hrubý výnos: <b>${wy.id}</b> (${wy.y.toFixed(1)} %).<br>`;
+ if(bs)h+=`• Najlepší výnos pri nízkom riziku (≤2): <b>${bs.id}</b> (${bs.y.toFixed(1)} %).<br>`;
+ {const ba=[...cur].filter(p=>!p.sold).sort((a,b)=>b.ms-a.ms)[0];if(ba)h+=`• Najlepšia zhoda s benchmarkom (len ponuky v predaji): <b>${ba.id}</b> (${ba.ms}/100).<br>`;}h+=`<span style="color:#888;font-size:12px">Výnos = stred uvedeného nájomného × 12 / cena (hrubý, pred daňami a nákladmi). U ponúk bez nájomného nie je vypočítaný.</span>`;
+ $('insights').innerHTML=h;
+}
+function table(){
+ const tp=Math.ceil(cur.length/PER)||1;if(page>tp)page=tp;
+ const rows=cur.slice((page-1)*PER,page*PER);
+ $('tb').innerHTML=rows.length?rows.map(p=>`<tr onclick="openM('${p.id}')" style="${p.sold?'opacity:.55;background:#f3f3f3':''}"><td><span class="rank">${p.rank}</span></td><td>${p.sold?'<span class="soldtag">PREDANÉ</span> ':''}<b>${p.title}</b><br><small style="color:#666">📍 ${p.city}</small></td><td><span class="badge ${p.ownership==='Osobné'?'own':'rent'}">${p.ownership}</span></td><td>${p.sqm} m²</td><td>${fmt(p.ppm)}</td><td class="price">${fmt(p.price)} €</td><td>${p.y!==null?p.y.toFixed(1)+' %<div class="ybar"><i style="width:${Math.min(100,p.y/8*100)}%"></i></div>':'<span style="color:#aaa">n/a</span>'}</td><td>${msBadge(p.ms)}</td><td>${p.rl==null?'<span style="color:#aaa">n/a</span>':[1,2,3,4,5].map(i=>`<span class="dot" style="${i<=p.rl?'background:'+RC[p.rl]:''}"></span>`).join('')}</td><td class="noprint" onclick="event.stopPropagation()"><input type="checkbox" ${p.sold?'checked':''} onchange="setSold('${p.id}',this.checked)" title="Predané"></td><td class="noprint"><button onclick="event.stopPropagation();openM('${p.id}')">Detail</button></td></tr>`).join(''):'<tr><td colspan="11" style="text-align:center;padding:20px">'+(tab==='sold'?'Archív je prázdny.':'Žiadne výsledky.')+'</td></tr>';
+ let b='';if(tp>1){b+=`<button ${page===1?'disabled':''} onclick="page--;table()">◄</button>`;for(let i=1;i<=tp;i++)b+=`<button class="${i===page?'on':''}" onclick="page=${i};table()">${i}</button>`;b+=`<button ${page===tp?'disabled':''} onclick="page++;table()">►</button>`;}
+ $('pag').innerHTML=b;
+}
+function openM(id){
+ const p=P.find(x=>x.id===id),md=med(P.map(x=>x.ppm));
+ $('mt').textContent=p.title;$('ms').textContent=`ID: ${p.id} | ${p.city}`;
+ $('mm').innerHTML=`<div><b>Cena:</b> <span class="price">${fmt(p.price)} €</span></div><div><b>Plocha:</b> ${p.sqm} m²</div><div><b>€/m²:</b> ${fmt(p.ppm)} (${p.ppm>md?'+':''}${Math.round((p.ppm/md-1)*100)} % vs. medián)</div><div><b>Hrubý výnos:</b> ${p.y!==null?p.y.toFixed(1)+' %':'n/a'}</div><div><b>Riziko:</b> ${p.rl==null?'n/a':p.rl+'/5'}</div><div><b>Vlastníctvo:</b> ${p.ownership}</div><div><b>Kontakt:</b> ${p.contact}</div><div><b>Dátum:</b> ${p.date}</div>`;
+ $('mr').innerHTML=p.risk;$('my').innerHTML=p.yield;$('mu').innerHTML=p.usage;$('mb').innerHTML=bd(p);curId=p.id;$('msold').checked=!!p.sold;$('adtxt').innerHTML=(p.content||'<i>Text inzerátu zatiaľ nebol doplnený.</i>')+(p.url?'<br><a href="'+p.url+'" target="_blank">Otvoriť pôvodný inzerát ↗</a>':'');$('adbox').style.display='none';$('adbtn').textContent='📄 Zobraziť inzerát';$('mc').href='tel:'+p.phone;
+ $('mv').style.display=p.video?'inline-block':'none';if(p.video)$('mv').href=p.video;
+ $('modal').style.display='block';
+}
+function setSold(id,v){const p=P.find(x=>x.id===id);p.sold=v;try{const o={};P.forEach(x=>o[x.id]=!!x.sold);localStorage.setItem('reality_sold',JSON.stringify(o))}catch(e){}const pg=page;apply();page=pg;table()}
+function toggleAd(){const b=$('adbox'),o=b.style.display==='none';b.style.display=o?'block':'none';$('adbtn').textContent=o?'✖ Zatvoriť inzerát':'📄 Zobraziť inzerát'}
+function closeM(){$('modal').style.display='none'}
+window.onclick=e=>{if(e.target===$('modal'))closeM()};
+function bench(){return{city:$('bcity').value.trim().toLowerCase(),min:+$('bmin').value,max:+$('bmax').value,price:+$('bprice').value,dw:$('bdw').checked,st:$('bst').checked,tn:$('bte').checked,ind:$('bin').checked,ft:+$('bft').value}}
+function score(p,B){
+ const parts=[],add=(label,max,f,note,unk)=>parts.push({label,max,pts:max*f,note,st:unk?'unk':f>=1?'ok':f>0?'part':'no'});
+ add('Plocha '+B.min+'–'+B.max+' m²',20,p.sqm<B.min?Math.max(0,1-(B.min-p.sqm)/B.min):p.sqm>B.max?Math.max(0,1-(p.sqm-B.max)/B.max):1,p.sqm+' m²');
+ add('Cena do '+fmt(B.price)+' €',20,p.price<=B.price?1:Math.max(0,1-(p.price-B.price)/B.price*2),fmt(p.price)+' €');
+ add('Mesto'+(B.city?' ('+B.city+')':''),15,!B.city||p.city.toLowerCase().includes(B.city)?1:0,p.city);
+ [['dw','Výklad',15],['st','Skladová časť',10],['tn','Možnosť nájomcu',10]].forEach(([k,l,m])=>{
+  if(!B[k])return add(l,m,1,'nevyžadované');
+  const v=p[k];if(v==null)return add(l,m,.5,'údaj chýba (pol. body)',true);
+  v==='adj'?add(l,m,.6,'po úprave (60 %)'):add(l,m,v?1:0,v?'áno':'nie');});
+ {const IN={building:[1,'samostatná budova (100)'],own:[.85,'samostatný objekt s vlastným vstupom (85)'],complex:[.4,'priestor v komplexe (40)']};
+  if(!B.ind)add('Vlastnícka nezávislosť',20,1,'nevyžadované');
+  else if(!IN[p.ind])add('Vlastnícka nezávislosť',20,.5,'údaj chýba (pol. body)',true);
+  else add('Vlastnícka nezávislosť',20,IN[p.ind][0],IN[p.ind][1]);}
+ if(!B.ft)add('Pešia frekvencia',10,1,'nevyžadované');
+ else if(p.ft==null)add('Pešia frekvencia ≥'+B.ft,10,.5,'údaj chýba (pol. body)',true);
+ else add('Pešia frekvencia ≥'+B.ft,10,Math.min(1,p.ft/B.ft),p.ft+' / 5');
+ const sum=parts.reduce((a,x)=>a+x.pts,0),mx=parts.reduce((a,x)=>a+x.max,0);return{parts,raw:Math.round(sum),mx,total:Math.round(sum/mx*100)};
+}
+function msBadge(v){return`<span class="ms" style="background:${v>=75?'#28a745':v>=50?'#f0ad4e':'#d9534f'}">${v}</span>`}
+function bd(p){const I={ok:'✅',part:'🟡',no:'❌',unk:'❔'};
+ return`<div style="background:#f8fafc;border:1px solid #cbd5e1;border-radius:4px;padding:10px"><b>🎯 Zhoda s benchmarkom: ${msBadge(p.ms)} / 100</b> <span style="color:#666">(${p.sc.raw} z ${p.sc.mx} bodov)</span><table style="margin-top:6px;font-size:12px">${p.sc.parts.map(x=>`<tr><td style="padding:3px 6px;border:0">${I[x.st]} ${x.label}</td><td style="padding:3px 6px;border:0;color:#555">${x.note}</td><td style="padding:3px 6px;border:0;text-align:right">${Math.round(x.pts)}/${x.max}</td></tr>`).join('')}</table></div>`}
+function reset(){['q','loc','own'].forEach(i=>$(i).value='');$('pmax').value=400000;$('smax').value=6000;$('amin').value=0;$('rmax').value=5;$('yonly').checked=false;$('msmin').value=0;$('sort').value='rank';apply()}
+['q','loc','bcity','bmin','bmax','bprice'].forEach(i=>$(i).oninput=apply);['own','pmax','smax','amin','rmax','yonly','sort','msmin','bdw','bst','bte','bin','bft'].forEach(i=>$(i).onchange=$(i).oninput=apply);
+apply();
+</script></body></html>

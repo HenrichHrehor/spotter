@@ -1,0 +1,21 @@
+{
+  "benchmark": {
+    "city": "Košice",
+    "minArea": 80,
+    "maxArea": 150,
+    "maxPrice": 400000,
+    "require": { "displayWindow": true, "storage": true, "tenantPotential": true, "independence": true },
+    "minFootTraffic": 5
+  },
+  "weights": {
+    "area": 20, "price": 20, "city": 15,
+    "displayWindow": 15, "storage": 10, "tenantPotential": 10,
+    "independence": 20, "footTraffic": 10
+  },
+  "flagFactors": { "true": 1, "adj": 0.6, "false": 0, "null": 0.5 },
+  "independenceFactors": { "building": 1, "own": 0.85, "complex": 0.4, "null": 0.5 },
+  "decay": { "areaBelowMin": "linear to 0 at area=0", "areaAboveMax": "linear to 0 at area=2*max", "priceAboveMax": "1 - 2*(price-max)/max, floor 0" },
+  "badge": { "green": 75, "orange": 50 },
+  "yield": { "barMaxPercent": 8 },
+  "ui": { "itemsPerPage": 10, "defaultTab": "active", "defaultSort": "rank" }
+}
