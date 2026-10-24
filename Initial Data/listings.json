@@ -291,5 +291,27 @@
     "risk": "Nízke až stredné riziko (môj odhad, inzerát riziká neuvádza): novostavba v dobrom stave, ale tichá rezidenčná štvrť s nepreukázaným dopytom po prenájme a bez nájomcu.",
     "yield": "Nájomné ani nájomca nie sú uvedené, výnos sa nedá vypočítať.",
     "usage": "<strong>Súčasné:</strong> Takmer nepoužívaný, nezariadený priestor (kuchynský kút, kúpeľňa, klimatizácia, alarm); v cene 1 parkovacie miesto.<br><strong>Alternatíva:</strong> Kancelárie, služby (kozmetika, masáže, poradenstvo).<br><strong>Doplnené mnou:</strong> celý priestor je z ulice plne presklený (výklad); sklad je možný po úprave."
+  },
+  {
+    "id": "ZV-01",
+    "ind": "building",
+    "st": true,
+    "tn": true,
+    "rank": 16,
+    "title": "Polyfunkčná budova s pozemkom 593 m² (Šoltésovej)",
+    "city": "Zvolen - ul. E. M. Šoltésovej",
+    "price": 395000,
+    "sqm": 593,
+    "ownership": "Osobné",
+    "date": "24.10.2026",
+    "contact": "Ing. Roman Cerha (0915 550 324)",
+    "phone": "0915550324",
+    "url": "https://reality.bazos.sk/inzerat/196803217/predam-polyfunkcnu-budovu-sirsie-centrum-zvolena.php",
+    "rl": 3,
+    "rent": null,
+    "content": "V uzavretom dvore na ul. E. M. Šoltésovej ponúkam na predaj väčšiu polyfunkčnú budovu spolu s priľahlými pozemkami o výmere 593 m2. Stavba bola daná do užívania v r. 1967 – pôvodne ako kotolňa. Súčasný majiteľ ju v posledných rokoch značne rekonštruoval a zmenil pôvodný účel. Momentálne je plne využívaná viacerými nájomníkmi. V objekte nájdeme kompletne vybavenú auto-elektrikársku dielňu , skladové priestory a dve novovybudované bytové jednotky. Pred budovou máme vytvorené parkovacie miesta na vlastnom pozemku. V objekte je plánovaná výstavba ďalších bytových jednotiek – projektová dokumentácie je zahrnutá v cene. Presnú polohu a použité stavebné materiály zašlem na vyžiadanie. Rekonštrukčné práce a modernizácia nehnuteľnosti prebieha naďalej. Predajná cena 395.000 bez DPH je stanovená na súčasný stav. Kontakt: Ing. ROMAN CERHA ,0915 550324. Viac foto a nehnuteľností nájdete na: focusreality.sk<br><br>Kontakt: Ing. Roman Cerha, 0915 550324<br>Lokalita: 960 01 Zvolen<br>Cena: 395 000 €<br>Videlo: 40 ľudí<br>Inzerát: <a href=\"https://reality.bazos.sk/inzerat/196803217/predam-polyfunkcnu-budovu-sirsie-centrum-zvolena.php\" target=\"_blank\" rel=\"noopener\">https://reality.bazos.sk/inzerat/196803217/predam-polyfunkcnu-budovu-sirsie-centrum-zvolena.php</a>",
+    "risk": "Stredné riziko (môj odhad, inzerát riziká neuvádza): stavba z r. 1967, pôvodne kotolňa, rekonštrukcia stále prebieha a uvedená cena je bez DPH. Objekt je už plne využitý viacerými nájomníkmi.",
+    "yield": "Nájomné nie je uvedené, hrubý výnos sa nedá vypočítať. Inzerát len uvádza, že budova je plne využitá viacerými nájomníkmi.",
+    "usage": "<strong>Súčasné:</strong> Auto-elektrikárska dielňa, skladové priestory a dve bytové jednotky; parkovanie na vlastnom pozemku.<br><strong>Alternatíva:</strong> Ďalšie byty podľa projektovej dokumentácie zahrnutej v cene.<br><strong>Poznámka k ploche:</strong> 593 m² je v inzeráte výmera priľahlých pozemkov, nie samostatne uvedená podlahová plocha budovy."
   }
 ]

@@ -7,7 +7,7 @@ Kontroly sa spúšťajú (1) pri štarte nad dátami, (2) po každom prepočte n
 - `price > 0`, `sqm > 0`, `ownership ∈ {Osobné, Nájom}`, `date` formát `dd.mm.yyyy`.
 - `rl ∈ {1..5, null}`, `ft ∈ {1..5, null}`, `ind ∈ {building, own, complex, null}`, `dw/st/tn ∈ {true,false,"adj",null}`.
 - `rent` je `null` alebo `[min,max]` s `0 < min ≤ max`.
-- `phone` neprázdny; `risk`, `yield`, `usage` neprázdne reťazce; `content` je voliteľný (aktuálne ho má 5 z 15 ponúk).
+- `phone` neprázdny; `risk`, `yield`, `usage` neprázdne reťazce; `content` je voliteľný (aktuálne ho má 6 z 16 ponúk).
 - Upozornenia (neblokujúce): zástupný telefón (`…0000000`), `rl == null`, `content` chýba, rozpor výnosu medzi textom a výpočtom.
 
 ## 2. Kontroly výstupu (po každom `render`)
@@ -24,12 +24,12 @@ Kontroly sa spúšťajú (1) pri štarte nad dátami, (2) po každom prepočte n
 ## 3. Scenáre (manuálne alebo automatizované)
 | # | Akcia | Očakávanie |
 |---|---|---|
-| S1 | Načítanie | tab Aktívne, 14 aktívnych + 1 archivovaná (DK-06) |
+| S1 | Načítanie | tab Aktívne, 15 aktívnych + 1 archivovaná (DK-06) |
 | S2 | Klik Archív | tabuľka = DK-06; graf aj medián nezmenené |
-| S3 | V Archíve odškrtnúť DK-06 | zmizne z Archívu, objaví sa v Aktívne, počty 15/0 |
+| S3 | V Archíve odškrtnúť DK-06 | zmizne z Archívu, objaví sa v Aktívne, počty 16/0 |
 | S4 | Zaškrtnúť „Predané“ v modále | ponuka opustí aktuálny tab, počty sa aktualizujú |
 | S5 | Min. zhoda 70 | zostanú len ponuky s `ms ≥ 70` |
-| S6 | Max. riziko = 1 | ostanú ponuky s `rl = 1` a prípadne `rl = null`; ponuky s `rl ≥ 2` (BA-09, KE-14, KE-15, DK-06) zmiznú |
+| S6 | Max. riziko = 1 | ostanú ponuky s `rl = 1` a prípadne `rl = null`; ponuky s `rl ≥ 2` (BA-09, KE-14, KE-15, DK-06, ZV-01) zmiznú |
 | S7 | Vypnúť „Vlastnícka nezávislosť“ | kritérium dá všetkým plné body, `mx` ostáva 120 |
 | S8 | Reload | označenia „Predané“ sa zachovajú (localStorage) |
 
@@ -51,11 +51,13 @@ Kontroly sa spúšťajú (1) pri štarte nad dátami, (2) po každom prepočte n
 | KE-13 | 64 | 77 | 4 449 | – |
 | KE-14 | 73 | 87 | 2 941 | – |
 | KE-15 | 73 | 88 | 2 833 | – |
+| ZV-01 | 60 | 73 | 666 | – |
 
-Medián €/m²: **2 323** (všetky, vrátane archívu) · **2 294.5** (len aktívne). Výsledok enginu sa musí zhodovať s tabuľkou na celé body.
+Medián €/m²: **2 289.5** (všetky, vrátane archívu) · **2 256** (len aktívne). Výsledok enginu sa musí zhodovať s tabuľkou na celé body.
 
 ## 5. Známe dátové upozornenia
 - BA-01: výnos z nájomného 6.6 % vs. text 5.5–6.5 %.
 - KE-14: kontakt a telefón sú zástupné; riziko 2/5 pochádza zo zjednodušeného zoznamu.
 - KE-15: `rl`, `ft`, `ind` sú odhady; `st = "adj"` (sklad po úprave), výklad potvrdený používateľom.
 - Sklad (`st`) je neznámy pri väčšine ponúk – skóre je preto dočasne „opatrné“.
+- ZV-01: 593 m² je výmera pozemku, nie podlahová plocha; cena je v inzeráte bez DPH; `rl` je odhad; nájomné nie je uvedené.

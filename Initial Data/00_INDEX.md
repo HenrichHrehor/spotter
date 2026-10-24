@@ -14,7 +14,7 @@ Zdroj: `reality_overview_vV.html` (jednosúborová verzia, ~200 riadkov JS). Ten
 | `03_RULES.md` | pravidlá bodovania, pravidlá zadávania dát, jazykové a formátovacie pravidlá |
 | `04_CHECK.md` | kontroly pred vykreslením, testy, zlaté hodnoty (snapshot) |
 | `rules.default.json` | váhy a benchmark ako konfigurácia (engine ich číta, nie sú v kóde) |
-| `listings.json` | aktuálnych 15 ponúk extrahovaných z vV (vrátane textov inzerátov) |
+| `listings.json` | aktuálnych 16 ponúk extrahovaných z vV a zo vstupu Zvolen (vrátane textov inzerátov) |
 
 ## Architektúra (odporúčaná štruktúra)
 ```
