@@ -45,6 +45,12 @@ tbody tr{cursor:pointer}tbody tr:hover{background:#f8fafc}
 .ag{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:10px}
 .ac{background:#f8f9fa;border:1px solid #e2e8f0;border-top:4px solid #0056b3;padding:10px;border-radius:4px;font-size:13px}
 .ac h4{font-size:13px;text-transform:uppercase;margin-bottom:6px}
+.citybox{position:relative}
+.citylist{display:none;position:absolute;z-index:30;left:0;right:0;top:100%;margin-top:2px;background:#fff;border:1px solid #cbd5e1;border-radius:4px;max-height:220px;overflow:auto;box-shadow:0 6px 16px rgba(15,23,42,.12)}
+.citylist button{display:block;width:100%;text-align:left;padding:7px 8px;border:0;border-bottom:1px solid #f1f4f8;background:#fff;cursor:pointer;font-size:13px;color:#1e293b}
+.citylist button.arch{color:#94a3b8}
+.citylist button.arch span{font-size:11px;margin-left:6px}
+.citylist button:hover,.citylist button.on{background:#eef5ff}
 @media(max-width:900px){.layout{grid-template-columns:1fr}aside{position:static}.kpis{grid-template-columns:repeat(2,1fr)}.ag{grid-template-columns:1fr}}
 @page{size:A4 portrait;margin:15mm 12mm}
 @media print{*{-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -57,7 +63,7 @@ tr{break-inside:avoid}table{font-size:9pt}}
 <div class="layout">
 <aside>
  <h3>Hľadať</h3><input type="text" id="q" placeholder="Názov, kontakt, ID...">
- <h3>Lokalita</h3><input type="text" id="loc" placeholder="📍 Mesto, ulica...">
+ <h3>Lokalita</h3><div class="citybox"><input type="text" id="loc" placeholder="📍 Mesto, ulica..." autocomplete="off"><div id="citylist" class="citylist noprint"></div></div>
  <h3>Vlastníctvo</h3><select id="own"><option value="">Všetky</option><option>Osobné</option><option>Nájom</option></select>
  <h3>Max. cena: <span class="rv" id="pv"></span></h3><input type="range" id="pmax" min="50000" max="400000" step="5000" value="400000">
  <h3>Max. cena za m²: <span class="rv" id="sv"></span></h3><input type="range" id="smax" min="500" max="6000" step="100" value="6000">
@@ -207,7 +213,31 @@ function score(p,B){
 function msBadge(v){return`<span class="ms" style="background:${v>=75?'#28a745':v>=50?'#f0ad4e':'#d9534f'}">${v}</span>`}
 function bd(p){const I={ok:'✅',part:'🟡',no:'❌',unk:'❔'};
  return`<div style="background:#f8fafc;border:1px solid #cbd5e1;border-radius:4px;padding:10px"><b>🎯 Zhoda s benchmarkom: ${msBadge(p.ms)} / 100</b> <span style="color:#666">(${p.sc.raw} z ${p.sc.mx} bodov)</span><table style="margin-top:6px;font-size:12px">${p.sc.parts.map(x=>`<tr><td style="padding:3px 6px;border:0">${I[x.st]} ${x.label}</td><td style="padding:3px 6px;border:0;color:#555">${x.note}</td><td style="padding:3px 6px;border:0;text-align:right">${Math.round(x.pts)}/${x.max}</td></tr>`).join('')}</table></div>`}
-function reset(){['q','loc','own'].forEach(i=>$(i).value='');$('pmax').value=400000;$('smax').value=6000;$('amin').value=0;$('rmax').value=5;$('yonly').checked=false;$('msmin').value=0;$('sort').value='rank';apply()}
-['q','loc','bcity','bmin','bmax','bprice'].forEach(i=>$(i).oninput=apply);['own','pmax','smax','amin','rmax','yonly','sort','msmin','bdw','bst','bte','bin','bft'].forEach(i=>$(i).onchange=$(i).oninput=apply);
+function reset(){['q','loc','own'].forEach(i=>$(i).value='');$('pmax').value=400000;$('smax').value=6000;$('amin').value=0;$('rmax').value=5;$('yonly').checked=false;$('msmin').value=0;$('sort').value='rank';$('citylist').style.display='none';apply()}
+function cityName(city){return city.split(' - ')[0].replace(/\s+(?:I|II|III|IV|V|VI|VII|VIII|IX|X)$/,'').trim()}
+let cityHi=-1;
+function cityGroups(){
+ const act=new Set(),arch=new Set();
+ P.forEach(p=>{(p.sold?arch:act).add(cityName(p.city))});
+ const q=$('loc').value.trim().toLowerCase(),ok=c=>!q||c.toLowerCase().includes(q),sort=(a,b)=>a.localeCompare(b,'sk');
+ return {A:[...act].filter(ok).sort(sort),R:[...arch].filter(c=>!act.has(c)&&ok(c)).sort(sort)};
+}
+function showCities(){
+ const {A,R}=cityGroups(),box=$('citylist'),esc=s=>s.replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+ const btn=(c,a)=>`<button type="button" class="${a?'arch':''}" data-city="${esc(c)}" data-arch="${a?1:0}" onmousedown="event.preventDefault()" onclick="pickCity(this.dataset.city,this.dataset.arch==='1')">${esc(c)}${a?' <span>archív</span>':''}</button>`;
+ if(!A.length&&!R.length){box.style.display='none';return}
+ box.innerHTML=A.map(c=>btn(c,0)).join('')+R.map(c=>btn(c,1)).join('');
+ box.style.display='block';cityHi=-1;
+}
+function pickCity(c,arch){$('loc').value=c;$('citylist').style.display='none';tab=arch?'sold':'act';apply()}
+function cityKey(e){
+ const box=$('citylist'),btns=[...box.querySelectorAll('button')];
+ if(e.key==='Escape'){box.style.display='none';return}
+ if(box.style.display!=='block'||!btns.length)return;
+ if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();cityHi=e.key==='ArrowDown'?Math.min(btns.length-1,cityHi+1):Math.max(0,cityHi-1);btns.forEach((b,i)=>b.classList.toggle('on',i===cityHi));btns[cityHi].scrollIntoView({block:'nearest'})}
+ if(e.key==='Enter'&&cityHi>=0){e.preventDefault();pickCity(btns[cityHi].dataset.city,btns[cityHi].dataset.arch==='1')}
+}
+['q','bcity','bmin','bmax','bprice'].forEach(i=>$(i).oninput=apply);['own','pmax','smax','amin','rmax','yonly','sort','msmin','bdw','bst','bte','bin','bft'].forEach(i=>$(i).onchange=$(i).oninput=apply);
+$('loc').oninput=()=>{apply();showCities()};$('loc').onfocus=showCities;$('loc').onblur=()=>setTimeout(()=>$('citylist').style.display='none',150);$('loc').onkeydown=cityKey;
 apply();
 </script></body></html>
