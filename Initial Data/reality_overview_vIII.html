@@ -63,7 +63,7 @@ tr{break-inside:avoid}table{font-size:9pt}}
 <div class="layout">
 <aside>
  <h3>Hľadať</h3><input type="text" id="q" placeholder="Názov, kontakt, ID...">
- <h3>Lokalita</h3><div class="citybox"><input type="text" id="loc" placeholder="📍 Mesto, ulica..." autocomplete="off"><div id="citylist" class="citylist noprint"></div></div>
+ <h3>Lokalita</h3><div class="citybox"><input type="text" id="loc" placeholder="📍 Mesto, ulica..." autocomplete="off" onclick="showCities()"><div id="citylist" class="citylist noprint"></div></div>
  <h3>Vlastníctvo</h3><select id="own"><option value="">Všetky</option><option>Osobné</option><option>Nájom</option></select>
  <h3>Max. cena: <span class="rv" id="pv"></span></h3><input type="range" id="pmax" min="50000" max="400000" step="5000" value="400000">
  <h3>Max. cena za m²: <span class="rv" id="sv"></span></h3><input type="range" id="smax" min="500" max="6000" step="100" value="6000">
